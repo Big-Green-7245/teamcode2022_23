@@ -2,15 +2,12 @@ package org.firstinspires.ftc.teamcode;
 
 // Standard Lib
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.*;
-
-import java.util.*;
-
-// Class import
-import org.firstinspires.ftc.teamcode.util.*;
-import org.firstinspires.ftc.teamcode.modules.*;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.teamcode.modules.ConcussionArm;
+import org.firstinspires.ftc.teamcode.modules.DriveTrain;
+import org.firstinspires.ftc.teamcode.util.ButtonHelper;
+import org.firstinspires.ftc.teamcode.util.TelemetryWrapper;
 
 
 @TeleOp(name = "TeleOpTest", group = "opmode")
@@ -56,7 +53,7 @@ public class TeleOpTest extends LinearOpMode {
             if (gp1.pressing(ButtonHelper.b)) driveTrain.translate(0.4, 50, 0, -180, 10);
 
             // Arm movement
-            arm.move(gamepad1.y ? 1 : gamepad1.a ? -1 : 0);
+            arm.move(gamepad1.y ? 200 : gamepad1.a ? -200 : 0, 0.2);
 
             // Other control methods
             if (gp2.pressing(ButtonHelper.x)) {
