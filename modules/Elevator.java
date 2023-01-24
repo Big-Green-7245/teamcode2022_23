@@ -7,13 +7,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.util.Function;
 
 public class Elevator implements Modulable, Tickable {
     private static final double POWER = 0.8;
 
     public HardwareMap hwMap;
     private DcMotorEx elevator;
-    private TouchSensor elevatorBtn;
+    public TouchSensor elevatorBtn;
 
     @Override
     public void init(HardwareMap hardwareMap) {
@@ -31,6 +32,8 @@ public class Elevator implements Modulable, Tickable {
         elevator.setPower(power);
     }
 
+
+
     public void startMoveToPos(int position) {
         elevator.setTargetPosition(position);
         elevator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -45,6 +48,15 @@ public class Elevator implements Modulable, Tickable {
     public void startMoveToGround() {
         startMoveToPos(-100000);
     }
+
+    public Function restMode = (obj) -> {
+        if (elevatorBtn.isPressed()) {
+            elevator.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            elevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            elevator.setTargetPosition(10);
+            elevator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+    };
 
     /**
      * Checks if the slider is pressing the button. If it is, reset the encoder.

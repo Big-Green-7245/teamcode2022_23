@@ -2,14 +2,32 @@ package org.firstinspires.ftc.teamcode.util;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
+
 import java.util.*;
 
 public class EventHandler {
 
+    /**
+     * The current running instance of the EventHandler
+     */
     public static EventHandler instance;
 
+    /**
+     * The list of all active states (labelled)
+     */
     public Map<String, MacroState> currentStates = new HashMap<String, MacroState>(){};
 
+    /**
+     * Access to user input
+     */
+    public Gamepad[] controls = new Gamepad[]{};
+
+    /**
+     * Determines whether or not a state will interfere with currently running processes
+     * @param state The state to check
+     * @return Returns tru if the state will interfere
+     */
     public boolean willInterfere(MacroState state){
         boolean willInterfere = false;
 
@@ -21,16 +39,6 @@ public class EventHandler {
         }
 
         return willInterfere;
-
-    }
-
-    public void addState(MacroState state, String stateName){
-        if (currentStates.containsKey(stateName)){
-            throw new IllegalArgumentException("State with the name " + stateName + " is already running");
-        }
-        if (!willInterfere(state)) {
-            currentStates.put(stateName, state);
-        }
     }
 
     public String[] getIncompatibleStates(MacroState toCheck){
@@ -41,6 +49,27 @@ public class EventHandler {
             }
         }
         return (String[]) incompatibleStates.toArray();
+    }
+
+    /**
+     * Adds a state to the list of active events. Throws an exception if the state will interfere with running processes
+     * @param state The state to add
+     * @param stateName The name of the state to add
+     */
+    public void addState(MacroState state, String stateName){
+        if (currentStates.containsKey(stateName)){
+            throw new IllegalArgumentException("State with the name " + stateName + " is already running");
+        }
+        String[] incompatibleStates = getIncompatibleStates(state);
+        if (incompatibleStates.length == 0) {
+            currentStates.put(stateName, state);
+        }else{
+            String incompatibilities = "";
+            for (String incompatibility: incompatibleStates){
+                incompatibilities += incompatibility;
+            }
+            throw new IllegalArgumentException(stateName + " interferes with " + incompatibilities);
+        }
     }
 
     public void terminateState(String stateName){
