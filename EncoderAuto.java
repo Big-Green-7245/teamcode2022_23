@@ -31,9 +31,9 @@ public class EncoderAuto extends LinearOpMode {
     private Intake intake;
 
     //Declare model for object detection
-    private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/signal.tflite";
+    private static final String TFOD_MODEL_ASSET = "/sdcard/FIRST/tflitemodels/signal.tflite";
 
-    private static final String[] LABELS = {"1 Blue", "2 Green", "3 Red"};
+    private static final String[] LABELS = {"junction"};
 
     private static final String VUFORIA_KEY = "AQIK9eP/////AAABmSfuIJd+0UVOt6G7lBD1wM8kaTvNDhfhZpIcg4Pa/wr6OIq8nARnVDLguWK5ae82T2dSvfb8NkfNPauXPlSmvwsWWq7zq+BfO5BfhaOsn3SNZKpBGKm8i3KMBnp48rD6oz/nQ8FATjUNv7j0W/CdhgWbete4GpVS7FC0Cr+6/iJGF1mqCEsCgiWx02sLd5NFkYqp+uKh5uiEtA/CC3T86hR/khTaX3BsnnXG9hUGh0t+lwxzL9ontudjc1ldRIhylOGnPUB0v6ht4R/X9iprB9yc1Je0D0e/Ra8ysLGROAxf8SAbuotjU2J7qmam6en3b9X0A0FrVMX1zI7W2vAzmJgrEaXZ+NmjgvsKGjI16/Qe";
 
@@ -135,8 +135,8 @@ public class EncoderAuto extends LinearOpMode {
 
         // Use loadModelFromAsset() if the TF Model is built in as an asset by Android Studio
         // Use loadModelFromFile() if you have downloaded a custom team model to the Robot Controller's FLASH.
-        //tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
-        tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+//        tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
     }
 
     private int detectLabel() {
@@ -147,14 +147,8 @@ public class EncoderAuto extends LinearOpMode {
                 telemetry.addData("# Object Detected", updatedRecognitions.size());
                 if (updatedRecognitions.size() == 1) {
                     Recognition recognition = updatedRecognitions.get(0);
-                    TelemetryWrapper.setLine(2, "Detected: " + recognition.getLabel());
-                    if (recognition.getLabel().equals("2 Green")) {
-                        detectedLabel = 1;
-                    } else if (recognition.getLabel().equals("1 Blue")) {
-                        detectedLabel = 2;
-                    } else if (recognition.getLabel().equals("3 Red")) {
-                        detectedLabel = 3;
-                    }
+                    TelemetryWrapper.setLine(3, "junction L: " + recognition.getLeft()
+                    + " R: " + recognition.getRight());
                 } else {
                     TelemetryWrapper.setLine(2, "Detected: None");
                 }
